@@ -136,6 +136,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+media
+users.json
+avatars
 
 # Spyder project settings
 .spyderproject
