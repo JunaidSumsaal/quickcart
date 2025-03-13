@@ -1,0 +1,16 @@
+{% extends "../base.html" %}
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">Your Orders</h2>
+<div class="bg-white p-4 rounded shadow">
+    {% for order in orders %}
+    <div class="border-b py-2">
+        <p class="text-lg font-semibold">Order #{{ order.id }}</p>
+        <p>Status: <span class="font-semibold">{{ order.status }}</span></p>
+        <p>Total: ${{ order.total_price }}</p>
+        <a href="{% url 'track-order' order.id %}" class="text-blue-500">View Details</a>
+    </div>
+    {% empty %}
+    <p class="text-gray-500">You have no orders.</p>
+    {% endfor %}
+</div>
+{% endblock %}

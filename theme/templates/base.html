@@ -1,0 +1,35 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+      {% block title %} QuickCart | Welcome to Organize your self{% endblock %}
+    </title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    {% tailwind_css %}
+  </head>
+  <body class="bg-gray-50 font-serif leading-normal tracking-normal">
+    {% comment %}
+    <header class="bg-blue-600 p-4 text-white w-full">
+      <div class="container mx-auto flex justify-between">
+        <a href="{% url 'home' %}" class="text-lg font-bold">QuickCart</a>
+        <div>
+          <a href="{% url 'cart' %}" class="px-3">Cart</a>
+          {% if user.is_authenticated %}
+          <a href="{% url 'profile' %}" class="px-3">Profile</a>
+          <a href="{% url 'logout' %}" class="px-3">Logout</a>
+          {% else %}
+          <a href="{% url 'register' %}" class="px-3">Register</a>
+          <a href="{% url 'login' %}" class="px-3">Login</a>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+    {% endcomment %}
+    {% block navigation %} {% include './navigation.html' %} {% endblock %}
+    <main class="mx-auto w-full">{% block content %} {% endblock %}</main>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+  </body>
+</html>
