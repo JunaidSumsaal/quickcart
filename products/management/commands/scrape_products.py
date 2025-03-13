@@ -11,7 +11,7 @@ from django.conf import settings
 import json
 
 KSH_TO_USD_RATE = 0.00771
-SCRAPE_URL = os.getenv('SCRAPE_URL')
+SCRAPE_URL = os.getenv('SCRAPE_URL') or 'https://www.jumia.co.ke/'
 fake = Faker()
 User = get_user_model()
 USER_FILE = "users.json"
@@ -287,7 +287,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         self.load_users()
-        url = os.getenv('SCRAPE_URL_PAGE')
+        url = os.getenv('SCRAPE_URL_PAGE') or 'https://www.jumia.co.ke/mlp-top-sellers/?page='
         start_url = f"{url}{random.randint(1, 10)}#catalog-listing"
 
         all_product_data = self.scrape_all_products(start_url)
