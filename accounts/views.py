@@ -1,6 +1,8 @@
+import os
 from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+from django.forms import model_to_dict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
@@ -8,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import Profile
 from .forms import UserRegisterForm, UserLoginForm, UserUpdateForm
+from django.contrib import messages
 
 User = get_user_model()
 
@@ -44,22 +47,19 @@ def logout_user(request):
 @login_required
 def profile(request):
     if request.method == "POST":
+        print("POST DATA:", request.POST)
+
         form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+        
         if form.is_valid():
-            user = form.save()
-
-            profile, created = Profile.objects.get_or_create(user=user)
-            profile.favorite_pick_up_point = form.cleaned_data.get('favorite_pick_up_point', profile.favorite_pick_up_point)
-            profile.phone_number = form.cleaned_data.get('phone_number', profile.phone_number)
-            profile.delivery_address = form.cleaned_data.get('delivery_address', profile.delivery_address)
-            profile.companies = form.cleaned_data.get('companies', profile.companies)
-            profile.save()
-
-            return redirect('profile')  # Redirect to profile page after saving
+            form.save()
+            return redirect("profile")
     else:
         form = UserUpdateForm(instance=request.user)
 
     return render(request, "accounts/profile.html", {"form": form})
+
+
 
 # Password Reset Request
 def request_password_reset(request):
@@ -70,7 +70,7 @@ def request_password_reset(request):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
-        reset_url = f"http://127.0.0.1:8000/reset-password/{uid}/{token}/"
+        reset_url = f"https://{os.get('ALLOWED_HOSTS')}/reset-password/{uid}/{token}/"
         send_mail(
             "Password Reset Request",
             f"Click the link to reset your password: {reset_url}",

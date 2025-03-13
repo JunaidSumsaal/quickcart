@@ -16,7 +16,7 @@
               <dd
                 class="mt-1.5 text-base font-semibold text-gray-900 dark:text-white"
               >
-                <a href="#" class="hover:underline">#{{ order.order_id }}</a>
+                <a href="{% url 'order-details' order.id %}" class="hover:underline">#{{ order.id }}</a>
               </dd>
             </dl>
 
@@ -29,7 +29,7 @@
               <dd
                 class="mt-1.5 text-base font-semibold text-gray-900 dark:text-white"
               >
-                {{ order.date|date:"d.m.Y" }}
+                {{ order.created_at|date:"d.m.Y" }}
               </dd>
             </dl>
 
@@ -42,7 +42,7 @@
               <dd
                 class="mt-1.5 text-base font-semibold text-gray-900 dark:text-white"
               >
-                ${{ order.price }}
+                ${{ order.total_price }}
               </dd>
             </dl>
 

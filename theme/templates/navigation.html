@@ -1,10 +1,17 @@
+{% load static%}
 <nav class="bg-white dark:bg-gray-800 antialiased">
   <div class="max-w-screen-xl px-4 mx-auto 2xl:px-0 py-4">
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-8">
         <div class="shrink-0">
-          <a href="#" title="" class="">
-            Quick Cart
+          <a href="{% url 'home' %}" title="" class="flex items-center">
+            <span class="text-2xl sm:text-md text-primary-800 mr-3 shadow-2xl font-bold">Quick</span>
+            <img
+              src="{% static 'images/logo/logo-2.png' %}"
+              class="mr-3 sm:h-6 h-12"
+              alt="MindVista Logo"
+            />
+            <span class="text-2xl sm:text-md text-primary-600 mr-3 shadow-2xl font-bold">Cart</span>
           </a>
         </div>
 
@@ -20,6 +27,26 @@
               Home
             </a>
           </li>
+          <li>
+            <a
+              href="{% url 'product-list' %}"
+              title=""
+              class="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
+            >
+              Products
+            </a>
+          </li>
+          {% if user.is_authenticated %}
+          <li>
+            <a
+              href="{% url 'order-list' %}"
+              title=""
+              class="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
+            >
+              Orders
+            </a>
+          </li>
+          {% endif %}
         </ul>
       </div>
 
@@ -27,7 +54,7 @@
         <!-- Cart -->
         <div class="ml-4 flow-root lg:ml-6">
           <a href="{% url 'view-cart' %}" class="group -m-2 flex items-center p-2">
-            <svg class="size-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <svg class="size-6 shrink-0 text-gray-400 group-hover:text-primary-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg>
             <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{{ cart_item_count }}</span>

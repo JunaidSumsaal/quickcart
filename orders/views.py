@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Order, OrderItem, OrderTracking
-from cart.models import Cart, CartItem
-from payments.models import Payment
+from cart.models import Cart
 
 @login_required
 def place_order(request):

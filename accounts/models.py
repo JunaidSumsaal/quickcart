@@ -17,12 +17,11 @@ class Profile(models.Model):
     favorite_pick_up_point = models.CharField(max_length=200, blank=True)
     companies = models.TextField(blank=True)
     payment_method = models.CharField(max_length=100, blank=True)
-    payment_method_expiry = models.CharField(max_length=7, blank=True)  # e.g., '10/2024'
+    payment_method_expiry = models.CharField(max_length=7, blank=True)
 
     def __str__(self):
         return f'{self.user.username} Profile'
 
-    # Add methods to calculate order count, reviews count, etc.
     def order_count(self):
         return self.user.orders.count()
 
