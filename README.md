@@ -49,7 +49,7 @@ Ensure you have the following installed:
 ### Setup Instructions
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/quickcart.git
+   git clone https://github.com/JunaidSumsaal/quickcart.git
    cd quickcart
    ```
 
@@ -115,6 +115,4 @@ Contributions are welcome! Follow these steps:
 ## License
 This project is licensed under the MIT License.
 
-## Contact
-For any inquiries, reach out to `your.email@example.com` or create an issue on GitHub.
 
