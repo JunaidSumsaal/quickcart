@@ -1,10 +1,174 @@
-{% extends "../base.html" %}
-{% block content %}
-<h2>{{ product.name }}</h2>
-<img src="{{ product.image.url }}" alt="{{ product.name }}" width="200">
-<p>{{ product.description }}</p>
-<p>Price: ${{ product.price }}</p>
-<p>Stock: {{ product.stock }}</p>
-<a href="{% url 'update-product' product.id %}">Edit</a>
-<a href="{% url 'delete-product' product.id %}">Delete</a>
+{% extends "../base.html" %} {% block content %}
+<div class="p-4">
+  <div class="lg:max-w-6xl max-w-xl mx-auto">
+    <div
+      class="grid items-start grid-cols-1 lg:grid-cols-2 gap-8 max-lg:gap-12 max-sm:gap-8"
+    >
+      <!-- Product Images -->
+      <div class="w-full lg:sticky top-0">
+        <div class="flex flex-row gap-2">
+          <!-- Thumbnail images -->
+          <div class="flex flex-col gap-2 w-16 max-sm:w-14 shrink-0">
+            {% for image in product_images %}
+            <img
+              src="{{ image.image.url  }}"
+              alt="..."
+              class="thumbnail-image aspect-[64/85] object-cover object-top w-full cursor-pointer border-b-2 {% if forloop.first %}border-black{% else %}border-transparent{% endif %}"
+            />
+            {% empty %}
+            <img
+              src="{{ placeholder_image_url }}"
+              alt="No Image"
+              class="thumbnail-image aspect-[64/85] object-cover object-top w-full cursor-pointer border-b-2 border-black"
+            />
+            {% endfor %}
+          </div>
+          <!-- Main Product Image -->
+          <div class="flex-1">
+            <img
+              id="main-product-image"
+              src="{{ product.image.url|default:'/media/products/placeholder.jpg' }}"
+              alt="..."
+              class="w-full aspect-[548/712] object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="w-full">
+        <div>
+          <h3 class="text-lg sm:text-xl font-semibold text-slate-900">
+            {{ product.name }}
+          </h3>
+          <p class="text-slate-500 mt-2 text-sm">{{ product.description }}</p>
+
+          <!-- Price -->
+          <div class="flex items-center flex-wrap gap-4 mt-6">
+            <h4 class="text-slate-900 text-2xl sm:text-3xl font-semibold">
+              ${{ product.price }}
+            </h4>
+            <p class="text-slate-500 text-lg">
+              <strike>${{ product.original_price }}</strike>
+              <span class="text-sm ml-1.5">Tax included</span>
+            </p>
+          </div>
+
+          <!-- Rating -->
+          <div class="flex items-center gap-4 mt-4">
+            <div
+              class="flex items-center gap-1 text-lg px-2.5 bg-green-600 text-white rounded-full"
+            >
+              <p>{{ product.average_rating|default:"0" }}</p>
+              <svg class="w-[13px] h-[13px] fill-white" viewBox="0 0 14 13">
+                <path
+                  d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z"
+                />
+              </svg>
+            </div>
+            <p class="text-slate-500 text-sm">
+              {{ product.reviews.count }} ratings and {{ product.reviews.count }} reviews
+            </p>
+          </div>
+        </div>
+
+        <hr class="my-6 border-slate-300" />
+
+        <!-- Wishlist & Cart Buttons -->
+        <div class="mt-6 flex flex-wrap gap-4">
+          <a
+            href="{% url 'wishlist-add' product.id %}"
+            class="px-4 py-3 w-[45%] border border-slate-300 rounded-lg hover:shadow-md bg-slate-100 hover:bg-slate-200 text-slate-900 text-sm font-medium"
+            >Add to wishlist</a
+          >
+          <form action="{% url 'add-to-cart' product.id %}" method="post">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="px-4 py-3 w-full border rounded-lg hover:shadow-md border-primary-600 bg-primary-600 hover:bg-primary-700 text-white text-sm  font-medium"
+            >
+              Add to cart
+            </button>
+          </form>
+        </div>
+
+        <hr class="my-6 border-slate-300" />
+
+        <!-- Reviews Section -->
+        <div>
+          <h3 class="text-lg sm:text-xl font-semibold text-slate-900">
+            Customer Reviews
+          </h3>
+          {% for review in product.reviews.all %}
+          <div class="mt-6 flex items-start">
+            <img
+              src="https://readymadeui.com/team-2.webp"
+              class="w-12 h-12 rounded-full border-2 border-white"
+            />
+            <div class="ml-3">
+              <h4 class="text-slate-900 text-sm font-semibold">
+                {{ review.user.username }}
+              </h4>
+              <div class="flex space-x-1 mt-1">
+                {% for i in "12345"|make_list %}
+                <svg
+                  class="w-[14px] h-[14px] {% if forloop.counter <= review.rating %}fill-[#059669]{% else %}fill-[#CED5D8]{% endif %}"
+                  viewBox="0 0 14 13"
+                >
+                  <path
+                    d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z"
+                  />
+                </svg>
+                {% endfor %}
+                <p class="text-xs text-slate-500 !ml-2">
+                  {{ review.created_at|timesince }} ago
+                </p>
+              </div>
+              <p class="text-sm text-slate-500 mt-4">{{ review.comment }}</p>
+            </div>
+          </div>
+          {% empty %}
+          <p class="text-sm text-slate-500 mt-4">
+            No reviews yet. Be the first to review this product.
+          </p>
+          {% endfor %}
+        </div>
+
+        <form method="post" action="{% url 'add-review' product.id %}">
+          {% csrf_token %}
+          <textarea
+            name="comment"
+            rows="4"
+            class="w-full p-2 border border-gray-300 rounded-md mt-4"
+            placeholder="Write your review..."
+          ></textarea>
+          <button
+            type="submit"
+            class="px-4 py-3 w-full border border-primary-600 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium mt-4"
+          >
+            Submit Review
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const thumbnails = document.querySelectorAll(".thumbnail-image");
+      const mainImage = document.getElementById("main-product-image");
+  
+      thumbnails.forEach(thumbnail => {
+          thumbnail.addEventListener("click", function () {
+              mainImage.src = this.src;
+  
+              thumbnails.forEach(img => img.classList.remove("border-black"));
+              thumbnails.forEach(img => img.classList.add("border-transparent"));
+  
+              this.classList.add("border-black");
+          });
+      });
+  });
+  </script>
+  
 {% endblock %}

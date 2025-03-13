@@ -6,6 +6,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from .models import Profile
 from .forms import UserRegisterForm, UserLoginForm, UserUpdateForm
 
 User = get_user_model()
@@ -40,16 +41,24 @@ def logout_user(request):
     logout(request)
     return redirect("login")
 
-# User Profile
 @login_required
 def profile(request):
     if request.method == "POST":
         form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
-            form.save()
-            return redirect("profile")
+            user = form.save()
+
+            profile, created = Profile.objects.get_or_create(user=user)
+            profile.favorite_pick_up_point = form.cleaned_data.get('favorite_pick_up_point', profile.favorite_pick_up_point)
+            profile.phone_number = form.cleaned_data.get('phone_number', profile.phone_number)
+            profile.delivery_address = form.cleaned_data.get('delivery_address', profile.delivery_address)
+            profile.companies = form.cleaned_data.get('companies', profile.companies)
+            profile.save()
+
+            return redirect('profile')  # Redirect to profile page after saving
     else:
         form = UserUpdateForm(instance=request.user)
+
     return render(request, "accounts/profile.html", {"form": form})
 
 # Password Reset Request

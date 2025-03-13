@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Order, OrderItem
+from .models import Order, OrderItem, OrderTracking
 from cart.models import Cart, CartItem
 from payments.models import Payment
 
@@ -23,7 +23,18 @@ def place_order(request):
 @login_required
 def track_order(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    return render(request, "orders/track_order.html", {"order": order})
+    order_items = OrderItem.objects.filter(order=order)
+    tracking_updates = OrderTracking.objects.filter(order=order).order_by("-timestamp")
+
+    return render(
+        request,
+        "orders/track_order.html",
+        {
+            "order": order,
+            "order_items": order_items,
+            "tracking_updates": tracking_updates,
+        },
+    )
 
 
 # Order Confirmation Page
@@ -43,3 +54,18 @@ def order_list(request):
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, "orders/order_detail.html", {"order": order})
+
+@login_required
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    
+    if order.status != "Cancelled":
+        order.status = "Cancelled"
+        order.save()
+    
+    return redirect("track-order", order_id=order.id)
+
+@login_required
+def order_details(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, "orders/order_details.html", {"order": order})

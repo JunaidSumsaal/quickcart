@@ -1,0 +1,82 @@
+{% extends "../base.html" %}
+{% block content %}
+<section class="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+  <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
+      Track the delivery of order #{{ order.id }}
+    </h2>
+
+    <div class="mt-6 sm:mt-8 lg:flex lg:gap-8">
+      <!-- Order Items -->
+      <div class="w-full divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 dark:divide-gray-700 dark:border-gray-700 lg:max-w-xl xl:max-w-2xl">
+        {% for item in order_items %}
+        <div class="space-y-4 p-6">
+          <div class="flex items-center gap-6">
+            <a href="{{ item.product.get_absolute_url }}" class="h-14 w-14 shrink-0">
+              <img class="h-full w-full object-cover" src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+            </a>
+
+            <a href="{{ item.product.get_absolute_url }}" class="min-w-0 flex-1 font-medium text-gray-900 hover:underline dark:text-white">
+              {{ item.product.name }}
+            </a>
+          </div>
+
+          <div class="flex items-center justify-between gap-4">
+            <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
+              <span class="font-medium text-gray-900 dark:text-white">Product ID:</span> {{ item.product.id }}
+            </p>
+
+            <div class="flex items-center justify-end gap-4">
+              <p class="text-base font-normal text-gray-900 dark:text-white">x{{ item.quantity }}</p>
+              <p class="text-xl font-bold leading-tight text-gray-900 dark:text-white">${{ item.total_price }}</p>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+          No items found for this order.
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Order Tracking Updates -->
+      <div class="mt-6 grow sm:mt-8 lg:mt-0">
+        <div class="space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Order history</h3>
+
+          <ol class="relative ms-3 border-s border-gray-200 dark:border-gray-700">
+            {% for update in tracking_updates %}
+            <li class="mb-10 ms-6 {% if forloop.first %}text-primary-700 dark:text-primary-500{% endif %}">
+              <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full {% if forloop.first %}bg-primary-100 dark:bg-primary-900{% else %}bg-gray-100 dark:bg-gray-700{% endif %} ring-8 ring-white dark:ring-gray-800">
+                <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
+                </svg>
+              </span>
+              <h4 class="mb-0.5 font-semibold">{{ update.timestamp|date:"d M Y, H:i" }}</h4>
+              <p class="text-sm">{{ update.status }}</p>
+            </li>
+            {% empty %}
+            <li class="ms-6 text-gray-500 dark:text-gray-400">No tracking updates available.</li>
+            {% endfor %}
+          </ol>
+
+          <div class="gap-4 sm:flex sm:items-center">
+            {% if order.status != "Cancelled" %}
+            <form action="{% url 'cancel-order' order.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="w-full rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
+                Cancel the order
+              </button>
+            </form>
+            {% endif %}
+
+            <a href="{% url 'order-details' order.id %}" class="mt-4 flex w-fit items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0">
+              Order details
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

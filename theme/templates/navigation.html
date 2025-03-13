@@ -4,16 +4,7 @@
       <div class="flex items-center space-x-8">
         <div class="shrink-0">
           <a href="#" title="" class="">
-            <img
-              class="block w-auto h-8 dark:hidden"
-              src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full.svg"
-              alt=""
-            />
-            <img
-              class="hidden w-auto h-8 dark:block"
-              src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full-dark.svg"
-              alt=""
-            />
+            Quick Cart
           </a>
         </div>
 
@@ -22,47 +13,11 @@
         >
           <li>
             <a
-              href="#"
+              href="{% url 'home' %}"
               title=""
               class="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
             >
               Home
-            </a>
-          </li>
-          <li class="shrink-0">
-            <a
-              href="#"
-              title=""
-              class="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
-            >
-              Best Sellers
-            </a>
-          </li>
-          <li class="shrink-0">
-            <a
-              href="#"
-              title=""
-              class="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
-            >
-              Gift Ideas
-            </a>
-          </li>
-          <li class="shrink-0">
-            <a
-              href="#"
-              title=""
-              class="text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
-            >
-              Today's Deals
-            </a>
-          </li>
-          <li class="shrink-0">
-            <a
-              href="#"
-              title=""
-              class="text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
-            >
-              Sell
             </a>
           </li>
         </ul>
@@ -75,7 +30,7 @@
             <svg class="size-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg>
-            <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+            <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{{ cart_item_count }}</span>
             <span class="sr-only">items in cart, view bag</span>
           </a>
         </div>
@@ -138,7 +93,7 @@
           >
             <li>
               <a
-                href="#"
+                href="{% url 'profile' %}"
                 title=""
                 class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
               >
@@ -147,54 +102,17 @@
             </li>
             <li>
               <a
-                href="#"
+                href="{% url 'order-list' %}"
                 title=""
                 class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
               >
                 My Orders
               </a>
             </li>
-            <li>
-              <a
-                href="#"
-                title=""
-                class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
-              >
-                Settings
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                title=""
-                class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
-              >
-                Favorites
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                title=""
-                class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
-              >
-                Delivery Addresses
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                title=""
-                class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
-              >
-                Billing Data
-              </a>
-            </li>
           </ul>
-
           <div class="p-2 text-sm font-medium text-gray-900 dark:text-white">
             <a
-              href="#"
+              href="{% url 'logout' %}"
               title=""
               class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
             >

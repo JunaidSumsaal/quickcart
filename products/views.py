@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Product, Category
-from .forms import ProductForm
+from .models import Product, Category, Wishlist
+from .forms import ProductForm, ReviewForm
 
 
 def product_list(request):
@@ -11,7 +11,12 @@ def product_list(request):
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    return render(request, "products/product_detail.html", {"product": product})
+    product_images = product.additional_images.all()
+
+    return render(request, "products/product_detail.html", {
+        "product": product,
+        "product_images": product_images
+    })
 
 
 @login_required
@@ -82,3 +87,27 @@ def storefront(request):
         "selected_brands": brand_filter,
         "selected_sort": sort_filter,
     })
+
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    wishlist.products.add(product)
+    return redirect('product-detail', product_id=product.id)
+
+@login_required
+def add_review(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            return redirect('product-detail', product_id=product.id)
+    else:
+        form = ReviewForm()
+
+    return render(request, 'products/add_review.html', {'form': form, 'product': product})

@@ -100,9 +100,7 @@ class Command(BaseCommand):
             image_name = image_url.split("/")[-1]
             image_name = f'{image_name.split("?")[1]}.jpg'
             save_dir = os.path.join(settings.MEDIA_ROOT, "products")
-
-            if not os.path.exists(save_dir):
-                os.makedirs(save_dir)
+            os.makedirs(save_dir, exist_ok=True)
 
             save_path = os.path.join(save_dir, image_name)
 
@@ -116,8 +114,8 @@ class Command(BaseCommand):
                 for chunk in response.iter_content(1024):
                     file.write(chunk)
 
-            self.stdout.write(self.style.SUCCESS(f"Image saved to {save_path}"))
-            return save_path
+            self.stdout.write(self.style.SUCCESS(f"Image saved to products/{os.path.basename(save_path)}"))
+            return f"products/{os.path.basename(save_path)}"
 
         except requests.RequestException as e:
             self.stderr.write(self.style.ERROR(f"Error downloading the image: {e}"))

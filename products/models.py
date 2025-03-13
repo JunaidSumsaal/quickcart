@@ -49,3 +49,26 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review by {self.user.username} - {self.rating} Stars"
+    
+class Wishlist(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    products = models.ManyToManyField('Product', related_name='wishlisted_by')
+
+    def __str__(self):
+        return f"{self.user.username}'s Wishlist"
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Favorite {self.product.name} by {self.user.username}"
+    
+class ProductReturn(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="product_returns")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    reason = models.TextField()
+    return_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Return for {self.product.name} by {self.user.username}"

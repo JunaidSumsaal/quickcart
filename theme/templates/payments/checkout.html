@@ -1,10 +1,56 @@
-{% extends "../base.html" %}
-{% block content %}
-<h2>Checkout</h2>
-<p>Order ID: {{ order.id }}</p>
-<p>Total Price: ${{ order.total_price }}</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Proceed to Payment</button>
-</form>
+{% extends "../base.html" %} {% block content %}
+<div class="bg-white p-4">
+    <div class="md:max-w-5xl max-w-xl mx-auto">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 max-md:order-1">
+          <h2 class="text-3xl font-bold text-slate-900">Checkout</h2>
+          <p class="text-slate-900 text-sm mt-4">
+            Confirm your order and proceed with payment.
+          </p>
+  
+          <!-- Display Cart Items -->
+          <div class="mt-6">
+            <h3 class="text-lg font-semibold text-slate-900">Your Cart</h3>
+            <ul class="mt-4 space-y-4">
+              {% for item in cart.items.all %}
+              <li class="flex justify-between text-sm text-slate-900">
+                <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                <span class="font-semibold">${{ item.total_price }}</span>
+              </li>
+              {% empty %}
+              <li class="text-gray-500 text-sm">Your cart is empty.</li>
+              {% endfor %}
+            </ul>
+          </div>
+  
+          <form method="POST" action="{% url 'process-payment' order.id %}" class="mt-8">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="w-full py-3 text-[15px] font-medium bg-primary-500 text-white rounded-md hover:bg-primary-600 tracking-wide"
+            >
+              Confirm & Pay
+            </button>
+          </form>
+        </div>
+  
+        <!-- Order Summary -->
+        <div class="bg-gray-100 p-6 rounded-md">
+          <h2 class="text-3xl font-bold text-slate-900">${{ order.total_price }}</h2>
+  
+          <ul class="text-slate-900 font-medium mt-12 space-y-4">
+            {% for item in cart.items.all %}
+            <li class="flex flex-wrap gap-4 text-sm">
+              {{ item.product.name }} <span class="ml-auto font-bold">${{ item.total_price }}</span>
+            </li>
+            {% endfor %}
+            <li class="flex flex-wrap gap-4 text-sm font-bold border-t-2 pt-4">
+              Total <span class="ml-auto">${{ order.total_price }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 {% endblock %}
